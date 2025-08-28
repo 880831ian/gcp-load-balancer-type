@@ -123,6 +123,10 @@ determine_lb_type() {
                 if [[ "$target" == *"targetPool"* || "$all_ports" == "true" ]]; then
                     lb_type="External passthrough Network Load Balancer (Target-pool Network Load Balancer)"
                 fi
+                # 新增判斷：target 為空且 backendService 有值且 IPProtocol 為 TCP/UDP
+                if [[ -z "$target" && -n "$backend_service" && ( "$ip_protocol" == "TCP" || "$ip_protocol" == "UDP" ) ]]; then
+                    lb_type="External passthrough Network Load Balancer"
+                fi
                 ;;
             "EXTERNAL_MANAGED")
                 if [[ "$target" == *"targetHttpProxies"* ]] || [[ "$target" == *"targetHttpsProxies"* ]]; then
